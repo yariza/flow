@@ -35,7 +35,7 @@ let velocities;
 let numParticles;
 
 sketch.setup = () => {
-    let gravity = new b2Vec2(0, 40.0);
+    let gravity = new b2Vec2(0, 200.0);
     world = window.world = new b2World(gravity); // ugh
 
     var bd = new b2BodyDef();
