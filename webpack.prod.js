@@ -8,7 +8,6 @@ module.exports = merge(common, {
     devtool: 'source-map',
     plugins: [
         new CopyWebpackPlugin([
-            'index.html',
             { from: 'lfjs/liquidfun.js', to: path.resolve(__dirname, './dist/lfjs/') },
         ])
     ]

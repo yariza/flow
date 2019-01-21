@@ -20,7 +20,7 @@ module.exports = {
         }]
     },
     plugins: [
-        new CleanWebpackPlugin(['dist/*'], {
+        new CleanWebpackPlugin(['dist/!(*index\.html)'], {
             verbose: true,
             dry: false
         })
