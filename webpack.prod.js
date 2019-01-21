@@ -10,7 +10,6 @@ module.exports = merge(common, {
         new CopyWebpackPlugin([
             'index.html',
             { from: 'lfjs/liquidfun.js', to: path.resolve(__dirname, './dist/lfjs/') },
-            { from: 'lfjs/testbed', to: path.resolve(__dirname, './dist/lfjs/testbed/') }
         ])
     ]
 });
