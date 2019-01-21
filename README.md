@@ -12,5 +12,5 @@ Uses:
 - [ ] setup webcam visualization
 - [ ] setup oflow visualization
 - [ ] tweak/optimize oflow
-- [ ] setup liquidfun
-- [ ] pretty visuals
+- [x] setup liquidfun
+- [x] pretty visuals
