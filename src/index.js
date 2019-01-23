@@ -1,8 +1,7 @@
 import Sketch from './sketch';
 import Stats from 'stats-js';
 
-import webcamFlow from './oflow/webcamFlow';
-console.log(webcamFlow);
+import WebCamFlow from './oflow/webcamFlow';
 
 let sketch = Sketch.create({
     eventTarget: document.body,
@@ -33,6 +32,9 @@ let particleSystem;
 let positions;
 let velocities;
 let numParticles;
+let webcamFlow;
+
+let flow;
 
 sketch.setup = () => {
     let gravity = new b2Vec2(0, 200.0);
@@ -78,6 +80,14 @@ sketch.setup = () => {
     positions = particleSystem.GetPositionBuffer();
     velocities = particleSystem.GetVelocityBuffer();
     numParticles = positions.length;
+
+    webcamFlow = new WebCamFlow(null, null, null, { width: { ideal: 480 }, height: { ideal: 320 } });
+    webcamFlow.startCapture();
+    webcamFlow.onCalculated(gotFlow);
+}
+
+function gotFlow(direction) {
+    flow = direction;
 }
 
 // https://stackoverflow.com/questions/849211/shortest-distance-between-a-point-and-a-line-segment
@@ -129,6 +139,19 @@ sketch.update = () => {
             velocities[i] += v.x * 300;
             velocities[i+1] += v.y * 300;
         }
+
+        if (flow) {
+            let fx = round(map(pos.x, -1.5, 1.5, flow.numX, 0));
+            let fy = round(map(pos.y, -1, 1, 0, flow.numY));
+            if (0 <= fx && fx < flow.numX && 0 <= fy && fy < flow.numY)
+            {
+                let index = (fy * flow.numX + fx) * 2;
+                let u = -flow.uvArray[index];
+                let v = flow.uvArray[index+1];
+                velocities[i] += u * 1;
+                velocities[i+1] += v * 1;
+            }
+        }
     }
 
     world.Step(1 / 60 / 60, velocityIterations, positionIterations);
@@ -150,11 +173,38 @@ sketch.draw = () => {
         let vy = velocities[i+1];
         let v = sqrt(vx*vx + vy*vy);
         v = map(v, 0, 200, 0, 1);
-        let r = floor(pow(v, 0.3) * 255);
-        let g = r;
-        let b = floor(pow(v, 0.5) * 255);
+
+        let r, g, b;
         let a = 0.7;
-        // r = g = b = 255;
+        if (flow)
+        {
+            let ix = floor(map(x, -1.5, 1.5, flow.width, 0));
+            ix = min(flow.width-1, max(0, ix));
+            let iy = floor(map(y, -1, 1, 0, flow.height));
+            iy = min(flow.height-1, max(0, iy));
+            let address = (flow.width * iy + ix) * 4;
+
+            r = flow.image[address];
+            g = flow.image[address+1];
+            b = flow.image[address+2];
+
+            let lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+            let m = max(10, lum) / lum;
+
+            let rgv = pow(v, 0.3);
+            let bv = pow(v, 0.5);
+
+            r = floor(min(255, r * m * rgv));
+            g = floor(min(255, g * m * rgv));
+            b = floor(min(255, b * m * bv));
+        }
+        else
+        {
+            r = floor(pow(v, 0.3) * 255);
+            g = r;
+            b = floor(pow(v, 0.5) * 255);
+        }
+
         ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
 
         let rad = map(pow(v, 1), 0, 1, 0.001, 0.035);
@@ -163,6 +213,34 @@ sketch.draw = () => {
         ctx.arc(x, y, rad, 0, TWO_PI);
         ctx.fill();
     }
+
+    // if (flow) {
+    //     let index = 0;
+
+    //     let h = 2 / flow.numY;
+    //     let w = h;
+        
+    //     for (let j = 0; j < flow.numY; j++)
+    //     {
+    //         for (let i = 0; i < flow.numX; i++)
+    //         {
+    //             let u = flow.uvArray[index++];
+    //             u = map(u, -flow.winStep, flow.winStep, 0, 1);
+    //             let v = flow.uvArray[index++];
+    //             v = map(v, -flow.winStep, flow.winStep, 0, 1);
+
+    //             let r = floor(u * 255);
+    //             let g = floor(v * 255);
+    //             let b = 0;
+
+    //             let x = map(i, 0, flow.numX, 1.5, -1.5);
+    //             let y = map(j, 0, flow.numY, -1.0, 1.0);
+
+    //             ctx.fillStyle = 'rgba(' + r + ', ' + g + ',' + b + ',' + 0.2 + ')';
+    //             ctx.fillRect(x, y, w, h);
+    //         }
+    //     }
+    // }
 }
 
 sketch.touchstart = (event) => {

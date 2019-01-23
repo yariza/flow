@@ -58,6 +58,7 @@ function VideoFlow(defaultVideoTag, zoneSize) {
         },
         calculate = function () {
             var newImage = getCurrentPixels();
+            // console.log(width + ":" + height);
             if (oldImage && newImage) {
                 var zones = calculator.calculate(oldImage, newImage, width, height);
                 calculatedCallbacks.forEach(function (callback) {

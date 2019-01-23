@@ -29,7 +29,7 @@ module.exports = WebCamFlow;
  *  // once you are done capturing call
  *  flow.stopCapture();
  */
-function WebCamFlow(defaultVideoTag, zoneSize, cameraFacing) {
+function WebCamFlow(defaultVideoTag, zoneSize, cameraFacing, videoOptions) {
     var videoTag,
         isCapturing,
         localStream,
@@ -70,7 +70,7 @@ function WebCamFlow(defaultVideoTag, zoneSize, cameraFacing) {
                     }
                 }
 
-                desiredDevice = { optional: [{sourceId: selectedVideoSource}] };
+                desiredDevice = videoOptions ? videoOptions : { optional: [{sourceId: selectedVideoSource}] };
 
                 navigator.getUserMedia({ video: desiredDevice }, function(stream) {
                     isCapturing = true;
@@ -91,7 +91,7 @@ function WebCamFlow(defaultVideoTag, zoneSize, cameraFacing) {
                         }
                     }
                     
-                    desiredDevice = { optional: [{sourceId: selectedVideoSource}] };
+                    desiredDevice = videoOptions ? videoOptions : { optional: [{sourceId: selectedVideoSource}] };
 
                     navigator.getUserMedia({ video: desiredDevice }, function(stream) {
                         isCapturing = true;

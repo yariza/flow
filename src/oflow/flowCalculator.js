@@ -15,16 +15,22 @@ function FlowCalculator(step) {
 }
 
 FlowCalculator.prototype.calculate = function (oldImage, newImage, width, height) {
-    var zones = [];
+    // var zones = [];
     var step = this.step;
     var winStep = step * 2 + 1;
-
+    
     var A2, A1B2, B1, C1, C2;
     var u, v, uu, vv;
     uu = vv = 0;
     var wMax = width - step - 1;
     var hMax = height - step - 1;
     var globalY, globalX, localY, localX;
+    
+    this.numX = ceil((wMax - step - 1) / winStep);
+    this.numY = ceil((hMax - step - 1) / winStep);
+    var numElements = this.numX * this.numY * 2;
+    this.uvArray = (this.uvArray && this.uvArray.length === numElements) ? this.uvArray : new Float32Array(numElements);
+    var index = 0;
 
     for (globalY = step + 1; globalY < hMax; globalY += winStep) {
         for (globalX = step + 1; globalX < wMax; globalX += winStep) {
@@ -70,20 +76,31 @@ FlowCalculator.prototype.calculate = function (oldImage, newImage, width, height
                 }
             }
 
-            
+            u = max(-winStep, min(winStep, u));
+            v = max(-winStep, min(winStep, v));
 
-            if (-winStep < u && u < winStep &&
-                -winStep < v && v < winStep) {
+            // if (-winStep < u && u < winStep &&
+                // -winStep < v && v < winStep) {
                 uu += u;
                 vv += v;
-                zones.push(new FlowZone(globalX, globalY, u, v));
-            }
+                // zones.push(new FlowZone(globalX, globalY, u, v));
+                
+            // }
+            this.uvArray[index++] = u;
+            this.uvArray[index++] = v;
         }
     }
 
     return {
-        zones : zones,
-        u : uu / zones.length,
-        v : vv / zones.length
+        // zones : zones,
+        uvArray: this.uvArray,
+        numX: this.numX,
+        numY: this.numY,
+        winStep: winStep,
+        u : uu / (numElements / 2),
+        v : vv / (numElements / 2),
+        image: newImage,
+        width: width,
+        height: height,
     };
 };
