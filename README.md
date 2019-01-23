@@ -9,8 +9,8 @@ Uses:
 
 ## todo
 
-- [ ] setup webcam visualization
-- [ ] setup oflow visualization
-- [ ] tweak/optimize oflow
+- [x] setup webcam visualization
+- [x] setup oflow visualization
+- [x] tweak/optimize oflow
 - [x] setup liquidfun
 - [x] pretty visuals
