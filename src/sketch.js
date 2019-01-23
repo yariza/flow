@@ -160,6 +160,7 @@
     var counter = 0;
     var touches = [];
     var resized = false;
+    var mouseMoved = false;
     var setup = false;
     var ratio = win.devicePixelRatio || 1;
     var isDiv = context.type == DOM;
@@ -237,6 +238,13 @@
         trigger( context.resize );
         resized = isFunction( context.resize );
       }
+
+      if ( !mouseMoved ) {
+        mouse.dx = mouse.dy = 0;
+        mouse.ox = mouse.x;
+        mouse.oy = mouse.y;
+      }
+      mouseMoved = false;
 
       if ( context.running && !counter ) {
 
@@ -373,6 +381,8 @@
     }
 
     function pointer( event ) {
+
+      mouseMoved = true;
 
       event = process( event );
 
