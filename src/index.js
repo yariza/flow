@@ -44,19 +44,19 @@ sketch.setup = () => {
     let body = world.CreateBody(bd);
 
     let b1 = new b2PolygonShape();
-    b1.SetAsBoxXYCenterAngle(0.05, 1, new b2Vec2(1.7, 0), 0);
+    b1.SetAsBoxXYCenterAngle(0.5, 2, new b2Vec2(2.1, 0), 0);
     body.CreateFixtureFromShape(b1, 5);
   
     let b2 = new b2PolygonShape();
-    b2.SetAsBoxXYCenterAngle(0.05, 1, new b2Vec2(-1.7, 0), 0);
+    b2.SetAsBoxXYCenterAngle(0.5, 2, new b2Vec2(-2.1, 0), 0);
     body.CreateFixtureFromShape(b2, 5);
   
     let b3 = new b2PolygonShape();
-    b3.SetAsBoxXYCenterAngle(2, 0.05, new b2Vec2(0, 1.1), 0);
+    b3.SetAsBoxXYCenterAngle(4, 0.5, new b2Vec2(0, 1.5), 0);
     body.CreateFixtureFromShape(b3, 5);
   
     let b4 = new b2PolygonShape();
-    b4.SetAsBoxXYCenterAngle(2, 0.05, new b2Vec2(0, -1.1), 0);
+    b4.SetAsBoxXYCenterAngle(4, 0.5, new b2Vec2(0, -1.5), 0);
     body.CreateFixtureFromShape(b4, 5);
 
     // setup particle system
@@ -68,7 +68,7 @@ sketch.setup = () => {
 
     particleSystem = world.CreateParticleSystem(psd);
     let box = new b2PolygonShape();
-    box.SetAsBoxXYCenterAngle(1.5, 0.7, new b2Vec2(0, 0.3), 0);
+    box.SetAsBoxXYCenterAngle(1.5, 0.7, new b2Vec2(0, 0.2), 0);
 
     let particleGroupDef = new b2ParticleGroupDef();
     particleGroupDef.shape = box;
@@ -148,7 +148,7 @@ sketch.draw = () => {
         let y = positions[i+1];
         let vx = velocities[i];
         let vy = velocities[i+1];
-        let v = Math.sqrt(vx*vx + vy*vy);
+        let v = sqrt(vx*vx + vy*vy);
         v = map(v, 0, 200, 0, 1);
         let r = floor(pow(v, 0.3) * 255);
         let g = r;
