@@ -48,15 +48,15 @@ sketch.setup = () => {
     let b1 = new b2PolygonShape();
     b1.SetAsBoxXYCenterAngle(0.5, 2, new b2Vec2(2.1, 0), 0);
     body.CreateFixtureFromShape(b1, 5);
-  
+
     let b2 = new b2PolygonShape();
     b2.SetAsBoxXYCenterAngle(0.5, 2, new b2Vec2(-2.1, 0), 0);
     body.CreateFixtureFromShape(b2, 5);
-  
+
     let b3 = new b2PolygonShape();
     b3.SetAsBoxXYCenterAngle(4, 0.5, new b2Vec2(0, 1.5), 0);
     body.CreateFixtureFromShape(b3, 5);
-  
+
     let b4 = new b2PolygonShape();
     b4.SetAsBoxXYCenterAngle(4, 0.5, new b2Vec2(0, -1.5), 0);
     body.CreateFixtureFromShape(b4, 5);
@@ -158,13 +158,14 @@ sketch.update = () => {
 }
 
 sketch.draw = () => {
-    let height = ctx.height;
-    let width = ctx.width;
+    let dpr = window.devicePixelRatio || 1;
+    let height = ctx.height * dpr;
+    let width = ctx.width * dpr;
 
-    ctx.setTransform(height, 1, 1, height, width, height);
+    ctx.setTransform(height / 2, 1, 1, height / 2, width/2, height/2);
 
     ctx.fillStyle = '#AAA';
-    
+
     for (let i = 0; i < numParticles; i += 2)
     {
         let x = positions[i];
@@ -208,7 +209,7 @@ sketch.draw = () => {
         ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
 
         let rad = map(pow(v, 1), 0, 1, 0.001, 0.035);
-        
+
         ctx.beginPath();
         ctx.arc(x, y, rad, 0, TWO_PI);
         ctx.fill();
@@ -219,7 +220,7 @@ sketch.draw = () => {
 
     //     let h = 2 / flow.numY;
     //     let w = h;
-        
+
     //     for (let j = 0; j < flow.numY; j++)
     //     {
     //         for (let i = 0; i < flow.numX; i++)
