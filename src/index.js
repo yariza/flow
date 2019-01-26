@@ -37,7 +37,7 @@ let webcamFlow;
 let flow;
 
 sketch.setup = () => {
-    let gravity = new b2Vec2(0, 200.0);
+    let gravity = new b2Vec2(0, 1000.0);
     world = window.world = new b2World(gravity); // ugh
 
     var bd = new b2BodyDef();
@@ -155,7 +155,7 @@ sketch.update = () => {
         }
     }
 
-    world.Step(1 / 60 / 60, velocityIterations, positionIterations);
+    world.Step(1 / 60 / 40, velocityIterations, positionIterations);
 }
 
 sketch.draw = () => {
@@ -210,7 +210,7 @@ sketch.draw = () => {
 
         ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
 
-        let rad = map(pow(v, 0.7), 0, 1, 0.001, 0.045);
+        let rad = map(pow(v, 0.5), 0, 1, 0.001, 0.045);
 
         ctx.beginPath();
         ctx.arc(x, y, rad, 0, TWO_PI);
