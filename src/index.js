@@ -81,7 +81,7 @@ sketch.setup = () => {
     velocities = particleSystem.GetVelocityBuffer();
     numParticles = positions.length;
 
-    webcamFlow = new WebCamFlow(null, null, null, { width: { ideal: 480 }, height: { ideal: 320 } });
+    webcamFlow = new WebCamFlow(undefined, undefined, undefined, { width: { ideal: 480 }, height: { ideal: 320 }, facingMode: 'user' });
     webcamFlow.startCapture();
     webcamFlow.onCalculated(gotFlow);
 }
@@ -141,7 +141,8 @@ sketch.update = () => {
         }
 
         if (flow) {
-            let fx = round(map(pos.x, -1.5, 1.5, flow.numX, 0));
+            let aspect = flow.numX / flow.numY;
+            let fx = round(map(pos.x, -1 * aspect, 1 * aspect, flow.numX, 0));
             let fy = round(map(pos.y, -1, 1, 0, flow.numY));
             if (0 <= fx && fx < flow.numX && 0 <= fy && fy < flow.numY)
             {
@@ -179,7 +180,8 @@ sketch.draw = () => {
         let a = 0.7;
         if (flow)
         {
-            let ix = floor(map(x, -1.5, 1.5, flow.width, 0));
+            let aspect = flow.numX / flow.numY;
+            let ix = floor(map(x, -1 * aspect, 1 * aspect, flow.width, 0));
             ix = min(flow.width-1, max(0, ix));
             let iy = floor(map(y, -1, 1, 0, flow.height));
             iy = min(flow.height-1, max(0, iy));
@@ -208,7 +210,7 @@ sketch.draw = () => {
 
         ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
 
-        let rad = map(pow(v, 1), 0, 1, 0.001, 0.035);
+        let rad = map(pow(v, 0.7), 0, 1, 0.001, 0.045);
 
         ctx.beginPath();
         ctx.arc(x, y, rad, 0, TWO_PI);

@@ -37,13 +37,11 @@ function WebCamFlow(defaultVideoTag, zoneSize, cameraFacing, videoOptions) {
         flowCalculatedCallback,
         videoFlow,
         onWebCamFail = function onWebCamFail(e) {
-            if(e.code === 1){
-                // window.alert('You have denied access to your camera. I cannot do anything.');
-            } else {
-                // window.alert('getUserMedia() is not supported in your browser.');
-            }
+            console.log(e);
+            // window.alert(e.message);
         },
         gotFlow = function(direction) {
+            // console.log(direction);
             calculatedCallbacks.forEach(function (callback) {
                 callback(direction);
             });
@@ -51,12 +49,13 @@ function WebCamFlow(defaultVideoTag, zoneSize, cameraFacing, videoOptions) {
         initCapture = function() {
         if (!videoFlow) {
             videoTag = defaultVideoTag || window.document.createElement('video');
+            videoTag.style.width = window.document.width + 'px';
+            videoTag.style.height = window.document.height + 'px';
             videoTag.setAttribute('autoplay', true);
+            videoTag.setAttribute('playsinline', true);
+            videoTag.setAttribute('muted', '');
             videoFlow = new VideoFlow(videoTag, zoneSize);
         }
-
-
-        
 
         if (window.MediaStreamTrack.getSources) {
             window.MediaStreamTrack.getSources(function(sourceInfos) {
@@ -72,10 +71,11 @@ function WebCamFlow(defaultVideoTag, zoneSize, cameraFacing, videoOptions) {
 
                 desiredDevice = videoOptions ? videoOptions : { optional: [{sourceId: selectedVideoSource}] };
 
-                navigator.getUserMedia({ video: desiredDevice }, function(stream) {
+                navigator.getUserMedia({ video: desiredDevice, audio: false }, function(stream) {
                     isCapturing = true;
                     localStream = stream;
                     videoTag.srcObject = stream;
+                    window.document.body.appendChild(videoTag);
                     if (stream) {
                         videoFlow.startCapture(videoTag);
                         videoFlow.onCalculated(gotFlow);
@@ -91,13 +91,14 @@ function WebCamFlow(defaultVideoTag, zoneSize, cameraFacing, videoOptions) {
                         }
                     }
                     
-                    desiredDevice = videoOptions ? videoOptions : { optional: [{sourceId: selectedVideoSource}] };
+                    desiredDevice = { optional: [{sourceId: selectedVideoSource} ] };
 
                     navigator.getUserMedia({ video: desiredDevice }, function(stream) {
                         isCapturing = true;
                         localStream = stream;
                         videoTag.srcObject = (stream);
-                        if (stream) {
+                        window.document.body.appendChild(videoTag);
+                            if (stream) {
                             videoFlow.startCapture(videoTag);
                             videoFlow.onCalculated(gotFlow);
                         }

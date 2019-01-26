@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "src/index.js",
   "scripts": {
-    "dev": "webpack-dev-server --open --config webpack.dev.js",
+    "dev": "webpack-dev-server --open --config webpack.dev.js --https --cert=/Users/ya/.localhost-ssl/cert.pem --key=/Users/ya/.localhost-ssl/key.pem",
     "build": "webpack --config webpack.prod.js",
     "deploy": "webpack --config webpack.prod.js && cd dist && git add --all && git commit -m \"deploy\" && git push origin master && cd .."
   },
